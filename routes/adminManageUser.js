@@ -1,7 +1,7 @@
 // Import required libraries and modules
 const express = require('express');
 const router = express.Router();
-const User = require('../model/user'); // User model
+const User = require('../models/user'); // User model
 
 // API route for getting all users
 router.get('/', async (req, res) => {

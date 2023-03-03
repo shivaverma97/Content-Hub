@@ -1,38 +1,74 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const mongoose = require('mongoose');
+const expressLayout = require('express-ejs-layouts')
+const User = require('./models/user')
+const flash = require('express-flash')
+const bcrypt = require('bcrypt')
+const app = express();
+const methodOverride = require('method-override')
 require('dotenv').config()
 
-const expressLayouts = require('express-ejs-layouts')
+// Set up body parser and session middleware
+
 app.set('view engine', 'ejs')
-app.set('layout', 'layouts/layout')
-app.use(expressLayouts)
 app.set('views', __dirname + '/views')
+app.set('layout', 'layout')
+app.use(expressLayout)
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(methodOverride('_method'))
+app.use(flash())
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false
+}));
 
-const bodyParser = require('body-parser')
+// Connect to database
+mongoose.set('strictQuery', false)
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.log(err));
 
-app.use(bodyParser.urlencoded({extended: false}))
+// Initialize passport and session middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
-const mongoose = require('mongoose')
-mongoose.set('strictQuery', true)
-mongoose.connect(process.env.DATABASE_URL)
+// Configure local strategy for passport authentication
+passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+  User.findOne({ email: email }, async (err, user) => {
+    if (err) { return done(err); }
+    if (!user) { return done(null, false, { message: 'Incorrect email' }); }
+    if (!await bcrypt.compare(password, user.password)) { return done(null, false, { message: 'Incorrect password' }); }
+    return done(null, user);
+  });
+}));
 
-const db = mongoose.connection
-db.on('error', error => console.log(error))
-db.once('open', ()=> console.log('Database Connected'))
+// Serialize and deserialize user for session storage
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser((id, done) => {
+  User.findById(id, (err, user) => done(err, user));
+});
 
-
-
+// Import and use login and registration routes
 const contactRouter = require('./routes/contact')
-app.use('/contactus', contactRouter)
-
 const adminUserMgmt = require('./routes/adminManageUser')
-app.use('/admin/users', adminUserMgmt)
-
 const adminRouter = require('./routes/admin')
+const loginRoutes = require('./routes/login');
+const registerRoutes = require('./routes/register');
+const homeRoutes = require('./routes/home');
+const logoutRoutes = require('./routes/logout')
+app.use('/contactus', contactRouter)
+app.use('/admin/users', adminUserMgmt)
+app.use('/login', loginRoutes);
+app.use('/register', registerRoutes);
+app.use('/home', homeRoutes);
+app.use('/logout', logoutRoutes);
 app.use('/admin', adminRouter)
 
-const homeRouter = require('./routes/home')
-app.use('/', homeRouter)
-
-
-app.listen(process.env.PORT)
+// Start the server
+app.listen(process.env.PORT, () => console.log('Server started on port ',process.env.PORT));
