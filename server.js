@@ -25,4 +25,14 @@ db.once('open', ()=> console.log('Database Connected'))
 const contactRouter = require('./routes/contact')
 app.use('/contactus', contactRouter)
 
+const adminUserMgmt = require('./routes/adminManageUser')
+app.use('/admin/users', adminUserMgmt)
+
+const adminRouter = require('./routes/admin')
+app.use('/admin', adminRouter)
+
+const homeRouter = require('./routes/home')
+app.use('/', homeRouter)
+
+
 app.listen(process.env.PORT)
