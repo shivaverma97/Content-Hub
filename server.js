@@ -58,6 +58,7 @@ passport.deserializeUser((id, done) => {
 const contactRouter = require('./routes/contact')
 const adminUserMgmt = require('./routes/adminManageUser')
 const adminRouter = require('./routes/admin')
+const adminPostRouter = require('./routes/adminManagePost')
 const loginRoutes = require('./routes/login');
 const registerRoutes = require('./routes/register');
 const homeRoutes = require('./routes/home');
@@ -69,6 +70,7 @@ app.use('/register', registerRoutes);
 app.use('/home', homeRoutes);
 app.use('/logout', logoutRoutes);
 app.use('/admin', adminRouter)
+app.use('/admin/posts', adminPostRouter)
 
 // Start the server
 app.listen(process.env.PORT, () => console.log('Server started on port ',process.env.PORT));
