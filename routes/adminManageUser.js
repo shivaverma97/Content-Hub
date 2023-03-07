@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user'); // User model
+const bcrypt = require('bcrypt')
 
 // API route for getting all users
 router.get('/', async (req, res) => {
@@ -20,10 +21,11 @@ router.get('/:id', getUser, (req, res) => {
 
 // API route for creating a new user
 router.post('/', async (req, res) => {
+  const hashedPass = await bcrypt.hash(req.body.password,10)
   const user = new User({
     name: req.body.name,
     email: req.body.email,
-    password: req.body.password,
+    password: hashedPass,
   });
   try {
     const newUser = await user.save();
