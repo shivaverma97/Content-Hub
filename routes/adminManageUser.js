@@ -4,8 +4,11 @@ const router = express.Router();
 const User = require('../models/user'); // User model
 const bcrypt = require('bcrypt')
 
+router.get('/', async (req, res) =>{
+  res.render('admin/adminUserMgmt')
+})
 // API route for getting all users
-router.get('/', async (req, res) => {
+router.get('/viewUser', async (req, res) => {
   try {
     const users = await User.find();
     res.json(users);
@@ -15,12 +18,16 @@ router.get('/', async (req, res) => {
 });
 
 // API route for getting a single user by ID
-router.get('/:id', getUser, (req, res) => {
+router.get('/viewUser/:id', getUser, (req, res) => {
   res.json(res.user);
 });
 
 // API route for creating a new user
-router.post('/', async (req, res) => {
+router.get('/addUser', async (req,res) => {
+  res.render('admin/addUser')
+})
+
+router.post('/addUser', async (req, res) => {
   const hashedPass = await bcrypt.hash(req.body.password,10)
   const user = new User({
     name: req.body.name,
@@ -28,15 +35,20 @@ router.post('/', async (req, res) => {
     password: hashedPass,
   });
   try {
-    const newUser = await user.save();
-    res.status(201).json(newUser);
+    await user.save();
+    console.info("Successfully added a User")
+    res.status(201).redirect('admin/admin');
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
 // API route for updating an existing user by ID
-router.patch('/:id', getUser, async (req, res) => {
+router.get('/updateUser', async(req, res) => {
+  res.render('admin/updateUser')
+})
+
+router.patch('/updateUser/:id', getUser, async (req, res) => {
   if (req.body.name != null) {
     res.user.name = req.body.name;
   }
@@ -47,15 +59,18 @@ router.patch('/:id', getUser, async (req, res) => {
     res.user.password = req.body.password;
   }
   try {
-    const updatedUser = await res.user.save();
-    res.json(updatedUser);
+    await res.user.save();
+    res.json({message:"The entry has been updated"})
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
 // API route for deleting a user by ID
-router.delete('/:id', getUser, async (req, res) => {
+router.get('/deleteUser', async(req, res) => {
+  res.render('admin/deleteUser')
+})
+router.delete('/deleteUser/:id', getUser, async (req, res) => {
     let userDelete
     try {
         userDelete = await res.user
