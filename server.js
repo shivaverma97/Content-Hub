@@ -16,8 +16,9 @@ require('dotenv').config()
 
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
-app.set('layout', 'layout')
+app.set('layout', 'layouts/layout')
 app.use(expressLayout)
+app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'))
