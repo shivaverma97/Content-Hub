@@ -3,7 +3,7 @@ const router = express.Router()
 const {checkAuthenticated, checkNotAuthenticated} = require('../userAuth')
 
 router.get('/', checkAuthenticated, (req, res) => {
-    res.render('home')
+    res.render('home/home')
 })
 
 module.exports = router

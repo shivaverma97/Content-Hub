@@ -1,0 +1,19 @@
+<div class="full-screen-container">
+  <% if (messages.error) { %>
+  <%= messages.error %>
+  <% } %>
+  <div class="login-form-container">
+    <h3 class="login-title">Welcome</h3>
+    <form action="/login" method="POST">
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" name="email" required>
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" required>
+      </div>
+      <button class="login-button" type="submit">Sign In</button>
+    </form>
+  </div>
+</div>

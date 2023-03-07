@@ -6,7 +6,7 @@ const {checkAuthenticated, checkNotAuthenticated} = require('../userAuth')
 
 // Render registration form
 router.get('/', checkNotAuthenticated, (req, res) => {
-  res.render('register');
+  res.render('register/register');
 });
 
 // Handle registration form submission
