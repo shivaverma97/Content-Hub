@@ -36,8 +36,8 @@ router.post('/addUser', async (req, res) => {
   });
   try {
     await user.save();
-    console.info("Successfully added a User")
-    res.status(201).redirect('admin/admin');
+    
+    res.status(201).redirect('../');
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
