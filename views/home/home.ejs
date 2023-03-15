@@ -1,0 +1,11 @@
+<div class="full-screen-container">
+    <% if (messages.error) { %>
+    <%= messages.error %>
+    <% } %>
+    <div class="login-form-container">
+        <form action="/logout?_method=DELETE" method="POST">
+        <h3 style="font-family: 'Quicksand', sans-serif;  color : white; font-size: 2.5em; font-weight: normal;">Welcome to homepage!! Soon you will be able to use all other services.</h3>
+        <button class="login-button" type="submit">Log Out</button>
+        </form>
+    </div>
+</div>
