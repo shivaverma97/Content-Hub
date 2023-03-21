@@ -56,14 +56,14 @@ passport.deserializeUser((id, done) => {
 });
 
 // Import and use login and registration routes
-const contactRouter = require('./routes/contact')
-const adminUserMgmt = require('./routes/adminManageUser')
 const adminRouter = require('./routes/admin')
+const adminUserMgmt = require('./routes/adminManageUser')
 const adminPostRouter = require('./routes/adminManagePost')
-const loginRoutes = require('./routes/login');
-const registerRoutes = require('./routes/register');
 const homeRoutes = require('./routes/home');
+const registerRoutes = require('./routes/register');
+const loginRoutes = require('./routes/login');
 const logoutRoutes = require('./routes/logout')
+const contactRouter = require('./routes/contact')
 app.use('/contactus', contactRouter)
 app.use('/admin/users', adminUserMgmt)
 app.use('/login', loginRoutes);

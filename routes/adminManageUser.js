@@ -15,12 +15,12 @@ router.get('/viewUser', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
+})
 
 // API route for getting a single user by ID
 router.get('/viewUser/:id', getUser, (req, res) => {
   res.json(res.user);
-});
+})
 
 // API route for creating a new user
 router.get('/addUser', async (req,res) => {
@@ -33,7 +33,7 @@ router.post('/addUser', async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: hashedPass,
-  });
+  })
   try {
     await user.save();
     
