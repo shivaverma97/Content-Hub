@@ -17,7 +17,11 @@ router.get('/viewPost', async (req, res) => {
 router.get('/viewPost/:id', getPost, async (req, res) =>{
     res.json(res.post)
 })
-  
+
+router.get('/addPost', async (req,res) => {
+    res.render('admin/addPost')
+})
+
 router.post('/addPost', async (req, res) => {
     const post = new Post({
         author: req.body.author,
@@ -33,6 +37,9 @@ router.post('/addPost', async (req, res) => {
     }
 })
   
+router.get('/updatePost', async (req,res) => {
+    res.render('admin/updatePost')
+})
 
 router.patch('/updatePost/:id',getPost,async (req, res) => {
     if (req.body.author != null) {
@@ -50,6 +57,10 @@ router.patch('/updatePost/:id',getPost,async (req, res) => {
     } catch (err) {
         res.status(400).json({ message: err.message})
     }
+})
+
+router.get('/deletePost', async (req,res) => {
+    res.render('admin/deletePost')
 })
 
 router.delete('/deletePost/:id', getPost, async (req,res) =>{
