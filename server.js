@@ -31,7 +31,7 @@ app.use(session({
 
 // Connect to database
 mongoose.set('strictQuery', false)
-mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.DATABASE_URL)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
 

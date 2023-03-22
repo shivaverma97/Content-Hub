@@ -1,10 +1,13 @@
 const express = require('express')
 const router = express.Router()
 const Post = require('../models/posts')
+
 // Define API routes for CRUD operations on blog posts
 router.get('/', async (req,res) =>{
     res.render('admin/adminPostMgmt')
 })
+
+// API for viewing all the posts
 router.get('/viewPost', async (req, res) => {
     try{
         const posts = await Post.find();
@@ -14,13 +17,13 @@ router.get('/viewPost', async (req, res) => {
     }
 })
 
+// API for viewing a particular posts
+
 router.get('/viewPost/:id', getPost, async (req, res) =>{
     res.json(res.post)
 })
 
-router.get('/addPost', async (req,res) => {
-    res.render('admin/addPost')
-})
+// API for adding a new post
 
 router.post('/addPost', async (req, res) => {
     const post = new Post({
@@ -37,9 +40,7 @@ router.post('/addPost', async (req, res) => {
     }
 })
   
-router.get('/updatePost', async (req,res) => {
-    res.render('admin/updatePost')
-})
+// API for updating a post
 
 router.patch('/updatePost/:id',getPost,async (req, res) => {
     if (req.body.author != null) {
@@ -59,9 +60,7 @@ router.patch('/updatePost/:id',getPost,async (req, res) => {
     }
 })
 
-router.get('/deletePost', async (req,res) => {
-    res.render('admin/deletePost')
-})
+// API for deleting the posts
 
 router.delete('/deletePost/:id', getPost, async (req,res) =>{
     let deletePost
@@ -74,6 +73,7 @@ router.delete('/deletePost/:id', getPost, async (req,res) =>{
     }
 } )
 
+// Midddleware to get Posts using ID of the Post
 async function getPost(req, res, next) {
     try{
         const post = await Post.findById(req.params.id)
