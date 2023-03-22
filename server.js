@@ -31,7 +31,7 @@ app.use(session({
 
 // Connect to database
 mongoose.set('strictQuery', false)
-mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.DATABASE_URL)
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.log(err));
 
@@ -56,14 +56,22 @@ passport.deserializeUser((id, done) => {
 });
 
 // Import and use login and registration routes
-const loginRoutes = require('./routes/login');
-const registerRoutes = require('./routes/register');
+const adminRouter = require('./routes/admin')
+const adminUserMgmt = require('./routes/adminManageUser')
+const adminPostRouter = require('./routes/adminManagePost')
 const homeRoutes = require('./routes/home');
+const registerRoutes = require('./routes/register');
+const loginRoutes = require('./routes/login');
 const logoutRoutes = require('./routes/logout')
+const contactRouter = require('./routes/contact')
+app.use('/contactus', contactRouter)
+app.use('/admin/users', adminUserMgmt)
 app.use('/login', loginRoutes);
 app.use('/register', registerRoutes);
 app.use('/home', homeRoutes);
 app.use('/logout', logoutRoutes);
+app.use('/admin', adminRouter)
+app.use('/admin/posts', adminPostRouter)
 
 // Start the server
-app.listen(3000, () => console.log('Server started on port 3000'));
+app.listen(process.env.PORT, () => console.log('Server started on port ',process.env.PORT));
